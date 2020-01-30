@@ -1,0 +1,11 @@
+﻿body {
+}
+
+.voting-text{
+    top: 80%;
+    left: 50%;
+    transform: translate(20%, -100%);
+    font-size: 30px;
+    text-shadow: #000 0px 0px 3px, #000 0px 0px 3px, #000 0px 0px 3px, #000 0px 0px 3px, #000 0px 0px 3px, #000 0px 0px 3px;
+}
+

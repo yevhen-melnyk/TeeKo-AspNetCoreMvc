@@ -1,0 +1,11 @@
+﻿@using TeeKoASPCore.Models
+@model LoginModel
+
+<div class="center-block">
+    <form asp-action="Login" method="post" asp-route-returnUrl="@Model.ReturnUrl">
+        <h1 style="color:darkorchid">Choose a name</h1>
+        <input type="text" name="name" value="" />
+        <input type="submit" value="Отправить" />
+    </form>
+</div>
+
