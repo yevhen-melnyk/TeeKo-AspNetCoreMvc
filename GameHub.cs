@@ -36,7 +36,7 @@ namespace TeeKoASPCore
             logger = _logger;
             eventHandler = _eventHandler;
         }
-        
+
         public override Task OnDisconnectedAsync(Exception exception)
         {
             gamesList.Disconnect(Context.User);
@@ -52,14 +52,30 @@ namespace TeeKoASPCore
         public async Task Connected(string gameId)
         {
             var game = gamesList.Game(gameId);
+
             if (game == null) return;
+
+            //Add the connected user
             gamesList.AddPlayer(Context.User, gameId);
+            //Inform users about gamestate change
             InformPlayersChanged(game);
+            //If someone joined late
             if (game._GameState != GameModel.GameState.waiting) {
                 await InformPhaseChanged(game, game._GameState);
             }
+            if (game.Owner.IsIdentical(Context.User)) {
+                await StartLobby(gameId);
+            }
+            InformPlayersChanged(game);
+            InformBasicInfo(game);
         }
-        
+
+
+        public async Task RequestBasicInfo(string gameId) {
+            var game = gamesList.Game(gameId);
+            InformBasicInfo(game);
+        }
+
         public Task StartLobby(string gameId) {
             var game = gamesList.Game(gameId);
             if (game == null) return Task.CompletedTask;
@@ -119,6 +135,10 @@ namespace TeeKoASPCore
             }
         }
 
+        private void InformBasicInfo(GameModel game) {
+            Clients.User(Context.User.GetId()).SendAsync("BasicInfo", game.maxDrawingsPerPlayer, game.maxLinesPerPlayer);
+        }
+
 
         /// <summary>
         /// Obtain a drawing and inform the client that a drawing was recieved from it
@@ -150,7 +170,7 @@ namespace TeeKoASPCore
             if (game._GameState == GameModel.GameState.composing)   //if state is right) 
             {
                 // get random pictures and lines and send them to client
-                var elements = game.GetComposingElements();
+                var elements = game.GetComposingElements(Context.User);
                 await Clients.Caller.SendAsync("ComposingElementsProvided", elements.Item1, elements.Item2);
                 
             }

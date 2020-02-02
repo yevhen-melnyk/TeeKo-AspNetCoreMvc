@@ -28,7 +28,12 @@ namespace TeeKoASPCore
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddSignalR();
+            services.AddSignalR(hubOptions =>
+            {
+                hubOptions.KeepAliveInterval = System.TimeSpan.FromMinutes(10);
+                hubOptions.HandshakeTimeout = System.TimeSpan.FromMinutes(5);
+            }
+            );
             services.AddSingleton<IUserIdProvider, IdProvider>();
             services.AddSingleton<GameHubEventHandler>();
 
