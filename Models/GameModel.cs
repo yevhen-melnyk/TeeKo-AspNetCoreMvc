@@ -104,8 +104,8 @@ namespace TeeKoASPCore.Models
         public Dictionary<GameState, int> phaseDurations = new Dictionary<GameState, int>()
         {
             {GameState.waiting, 0},
-            {GameState.drawing, 15},
-            {GameState.writing, 6},
+            {GameState.drawing, 150},
+            {GameState.writing, 60},
             {GameState.composing, 30},
             {GameState.voting, 30}
         };
